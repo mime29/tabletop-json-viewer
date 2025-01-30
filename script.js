@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const dropZone = document.getElementById("drop-zone");
-    const cardContainer = document.getElementById("cardContainer");
+    // Grab the container for all collections
+    const collectionsContainer = document.getElementById("collectionsContainer");
 
     dropZone.addEventListener("dragover", (event) => {
         event.preventDefault();
@@ -29,52 +30,77 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function displayCards(data) {
-        cardContainer.innerHTML = ""; // Clear previous cards
+        collectionsContainer.innerHTML = ""; // Clear previous cards
     
         if (!data.ObjectStates || data.ObjectStates.length === 0) return;
     
-        const deck = data.ObjectStates[0].CustomDeck["1"]; // Assuming single deck
-        const faceUrl = deck.FaceUrl;
-        const backUrl = deck.BackUrl;
-        const numWidth = deck.NumWidth; // Number of columns
-        const numHeight = deck.NumHeight; // Number of rows
-    
-        // Dimensions of each card in percentage
-        const cardWidth = 100 / (numWidth - 1); // Width per card in %
-        const cardHeight = 100 / (numHeight - 1); // Height per card in %
-    
-        data.ObjectStates[0].ContainedObjects.forEach((cardData, index) => {
-            const col = index % numWidth; // Column index
-            const row = Math.floor(index / numWidth); // Row index
-    
-            console.log("col" + col);
-            console.log("row" + row);
+        // Iterate through each ObjectState in the data
+        data.ObjectStates.forEach((collection) => {
+            // Create a wrapper for the collection
+            const collectionWrapper = document.createElement("div");
+            collectionWrapper.className = "collectionWrapper";
+        
+            // Create and append the title
+            const title = document.createElement("h2");
+            title.innerText = `${collection.Nickname} - ${collection.Name}`;
+            collectionWrapper.appendChild(title);
 
-            const cardElement = document.createElement("div");
-            cardElement.classList.add("card");
-    
-            const frontSide = document.createElement("div");
-            frontSide.classList.add("side", "front");
-            frontSide.style.backgroundImage = `url(${faceUrl})`;
-            frontSide.style.backgroundPosition = `${col * cardWidth}% ${row * cardHeight}%`;
 
-            console.log("position: " + `${col * cardWidth}% ${row * cardHeight}%`);
+            const deck = collection.CustomDeck["1"]; // Assuming single deck
+            const faceUrl = deck.FaceUrl;
+            const backUrl = deck.BackUrl;
+            const numWidth = deck.NumWidth; // Number of columns
+            const numHeight = deck.NumHeight; // Number of rows
 
-            frontSide.style.backgroundSize = `${numWidth * 100}% ${numHeight * 100}%`;
-    
-            const backSide = document.createElement("div");
-            backSide.classList.add("side", "back");
-            backSide.style.backgroundImage = `url(${backUrl})`;
-            backSide.style.backgroundSize = "cover";
-    
-            cardElement.appendChild(frontSide);
-            cardElement.appendChild(backSide);
-            cardElement.addEventListener("click", () => {
-                cardElement.classList.toggle("flipped");
+
+            // Dimensions of each card in percentage
+            const cardWidth = 100 / (numWidth - 1); // Width per card in %
+            const cardHeight = 100 / (numHeight - 1); // Height per card in %
+
+
+            // Create the card container
+            const cardContainer = document.createElement("div");
+            cardContainer.className = "cardContainer";
+            cardContainer.id = "cardContainer";
+
+            // Add cards to the card container
+            collection.ContainedObjects.forEach((cardData, index) => {
+                const col = index % numWidth; // Column index
+                const row = Math.floor(index / numWidth); // Row index
+
+                const card = document.createElement("div");
+                card.classList.add("card");
+
+                const frontSide = document.createElement("div");
+                frontSide.classList.add("side", "front");
+                frontSide.style.backgroundImage = `url(${faceUrl})`;
+                frontSide.style.backgroundPosition = `${col * cardWidth}% ${row * cardHeight}%`;
+
+                console.log("position: " + `${col * cardWidth}% ${row * cardHeight}%`);
+
+                frontSide.style.backgroundSize = `${numWidth * 100}% ${numHeight * 100}%`;
+
+                const backSide = document.createElement("div");
+                backSide.classList.add("side", "back");
+                backSide.style.backgroundImage = `url(${backUrl})`;
+                backSide.style.backgroundSize = "cover";
+
+                card.appendChild(frontSide);
+                card.appendChild(backSide);
+                card.addEventListener("click", () => {
+                    card.classList.toggle("flipped");
+                });
+
+                cardContainer.appendChild(card);
+                
             });
-    
-            cardContainer.appendChild(cardElement);
+
+            // Add the card container to the wrapper
+            collectionWrapper.appendChild(cardContainer);
+
+            // Append the collection wrapper to the main container
+            collectionsContainer.appendChild(collectionWrapper);
+
         });
-    }    
-    
-});
+    }
+})

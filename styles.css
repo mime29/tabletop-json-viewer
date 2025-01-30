@@ -103,3 +103,10 @@ body {
 .side { 
     /* border: 1px solid red; */
 /* } */
+
+.collectionWrapper {
+    width: 100%;
+}
+.collectionsContainer {
+    width: 100%;
+}
