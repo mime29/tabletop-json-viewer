@@ -15,26 +15,74 @@ body {
     margin: 20px 0;
 }
 
-.card-container {
+#cardContainer {
     display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding: 20px;
     flex-wrap: wrap;
-    margin: auto;
-    align-items: center;
+    gap: 10px;
     justify-content: center;
-}
-
-.card {
+    perspective: 1000px; /* Add depth */
+  }
+  
+  .card {
     width: 150px;
-    height: 210px;
+    height: 200px;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.6s;
-    cursor: pointer;
-}
-
+    transform: rotateY(0deg);
+    transition: transform 0.6s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: rotateY(180deg);
+  }
+  
+  /* Front and Back Faces */
+  .card-front,
+  .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    background: white;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .card-back {
+    transform: rotateY(180deg);
+    background: lightgray;
+  }
+  
+  /* Add Thickness Edges */
+  .card-edge {
+    position: absolute;
+    background: gray;
+    width: 150px; /* Matches card width */
+    height: 5px; /* Thickness */
+  }
+  
+  .card-edge.top {
+    transform: translateZ(100px) rotateX(90deg); /* Top edge */
+  }
+  
+  .card-edge.bottom {
+    transform: translateZ(-100px) rotateX(90deg); /* Bottom edge */
+  }
+  
+  .card-edge.left {
+    transform: rotateY(-90deg);
+    width: 5px; /* Thickness */
+    height: 200px; /* Matches card height */
+  }
+  
+  .card-edge.right {
+    transform: rotateY(90deg);
+    width: 5px; /* Thickness */
+    height: 200px;
+  }
+  
 .card .side {
     width: 100%;
     height: 100%;
@@ -51,7 +99,7 @@ body {
 .flipped {
     transform: rotateY(180deg);
 }
-
-.side {
+/*
+.side { 
     /* border: 1px solid red; */
-}
+/* } */
