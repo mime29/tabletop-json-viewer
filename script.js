@@ -31,15 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function displayCards(data) {
         collectionsContainer.innerHTML = ""; // Clear previous cards
-    
+
         if (!data.ObjectStates || data.ObjectStates.length === 0) return;
-    
+
         // Iterate through each ObjectState in the data
         data.ObjectStates.forEach((collection) => {
             // Create a wrapper for the collection
             const collectionWrapper = document.createElement("div");
             collectionWrapper.className = "collectionWrapper";
-        
+
             // Create and append the title
             const title = document.createElement("h2");
             title.innerText = `${collection.Nickname} - ${collection.Name}`;
@@ -63,37 +63,43 @@ document.addEventListener("DOMContentLoaded", () => {
             cardContainer.className = "cardContainer";
             cardContainer.id = "cardContainer";
 
-            // Add cards to the card container
-            collection.ContainedObjects.forEach((cardData, index) => {
-                const col = index % numWidth; // Column index
-                const row = Math.floor(index / numWidth); // Row index
+            // Load the image to calculate its aspect ratio
+            const img = new Image();
+            img.src = backUrl;
+            img.onload = () => {
+                const cardRatio = img.width / img.height;
 
-                const card = document.createElement("div");
-                card.classList.add("card");
+                // Add cards to the card container
+                collection.ContainedObjects.forEach((cardData, index) => {
+                    const col = index % numWidth; // Column index
+                    const row = Math.floor(index / numWidth); // Row index
 
-                const frontSide = document.createElement("div");
-                frontSide.classList.add("side", "front");
-                frontSide.style.backgroundImage = `url(${faceUrl})`;
-                frontSide.style.backgroundPosition = `${col * cardWidth}% ${row * cardHeight}%`;
+                    const card = document.createElement("div");
+                    card.classList.add("card");
+                    card.style.aspectRatio = cardRatio;
 
-                console.log("position: " + `${col * cardWidth}% ${row * cardHeight}%`);
+                    const frontSide = document.createElement("div");
+                    frontSide.classList.add("side", "front");
+                    frontSide.style.backgroundImage = `url(${faceUrl})`;
+                    frontSide.style.backgroundPosition = `${col * cardWidth}% ${row * cardHeight}%`;
 
-                frontSide.style.backgroundSize = `${numWidth * 100}% ${numHeight * 100}%`;
+                    frontSide.style.backgroundSize = `${numWidth * 100}% ${numHeight * 100}%`;
 
-                const backSide = document.createElement("div");
-                backSide.classList.add("side", "back");
-                backSide.style.backgroundImage = `url(${backUrl})`;
-                backSide.style.backgroundSize = "cover";
+                    const backSide = document.createElement("div");
+                    backSide.classList.add("side", "back");
+                    backSide.style.backgroundImage = `url(${backUrl})`;
+                    backSide.style.backgroundSize = "cover";
 
-                card.appendChild(frontSide);
-                card.appendChild(backSide);
-                card.addEventListener("click", () => {
-                    card.classList.toggle("flipped");
+                    card.appendChild(frontSide);
+                    card.appendChild(backSide);
+                    card.addEventListener("click", () => {
+                        card.classList.toggle("flipped");
+                    });
+
+                    cardContainer.appendChild(card);
+
                 });
-
-                cardContainer.appendChild(card);
-                
-            });
+            };
 
             // Add the card container to the wrapper
             collectionWrapper.appendChild(cardContainer);

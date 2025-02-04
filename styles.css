@@ -24,7 +24,6 @@ body {
   }
   
   .card {
-    width: 150px;
     height: 200px;
     position: relative;
     transform-style: preserve-3d;
