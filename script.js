@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             const deck = collection.CustomDeck["1"]; // Assuming single deck
-            const faceUrl = deck.FaceUrl;
-            const backUrl = deck.BackUrl;
+            const faceUrl = deck.FaceUrl.replace(/^\{verifycache\}/, '');
+            const backUrl = deck.BackUrl.replace(/^\{verifycache\}/, '');
             const numWidth = deck.NumWidth; // Number of columns
             const numHeight = deck.NumHeight; // Number of rows
 
